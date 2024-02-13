@@ -1,7 +1,7 @@
 {
-  "name": "asap-backend",
+  "name": "s51_memoriavault",
   "version": "1.0.0",
-  "description": "",
+  "description": "Project Name : MemoriaVault",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
