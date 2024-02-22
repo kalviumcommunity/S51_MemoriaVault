@@ -2,7 +2,14 @@ require("dotenv").config();
 const express = require("express")
 const app = express()
 const mongoose = require("mongoose");
-const {connectdb,isConnected, isConnectedNow}=require('./config/dbConn.js')
+const {connectdb, isConnectedNow}=require('./config/dbConn.js')
+const {getRouter, postRouter, deleteRouter, putRouter} = require("./routes/MemoirVault.routes.js")
+
+app.use("/",getRouter)
+app.use("/",postRouter)
+app.use("/",deleteRouter)
+app.use("/",putRouter)
+
 
 app.get("/ping",(req,res)=>{
     res.send("Hello,This is Jeeveeka")
