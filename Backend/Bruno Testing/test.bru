@@ -1,0 +1,22 @@
+meta {
+  name: test
+  type: http
+  seq: 4
+}
+
+post {
+  url: http://localhost:3000/adduser
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+      "ID":"JY1775",
+      "Name":"Sreela",
+      "Password":"12349",
+      "ImageURL":"https://cdn.pixabay.com/photo/2016/05/05/02/37/sunset-1373171_1280.jpg",
+      "VideoURL":"https://youtube.com/video",
+      "DocumentURL":"https://en.wikipedia.org/wiki/Google_Docs"
+  }
+}

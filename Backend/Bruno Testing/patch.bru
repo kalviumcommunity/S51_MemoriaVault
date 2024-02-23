@@ -1,0 +1,17 @@
+meta {
+  name: patch
+  type: http
+  seq: 5
+}
+
+patch {
+  url: http://localhost:3000/updateuser/JY1775
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "Password":"J7890"
+  }
+}
