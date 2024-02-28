@@ -1,12 +1,12 @@
 import './App.css'
-import Profile from './Profile'
+import Connection from './Components/Connection'
 
 function App() {
 
 
   return (
     <>
-      <Profile/>
+      <Connection/>
     </>
   )
 }
