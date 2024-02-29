@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
 function Connection() {
   const tableHeaderStyle = {
@@ -19,6 +20,16 @@ function Connection() {
   const URLColumnStyle = {
     ...tableCellStyle,
     color: 'lightBlue',
+  };
+
+  const buttonStyle = {
+    backgroundColor: '#3498db',
+    color: '#fff',
+    padding: '10px 15px',
+    border: 'none',
+    borderRadius: '4px',
+    cursor: 'pointer',
+    mar
   };
 
   const [data, setData] = useState([]);
@@ -49,9 +60,13 @@ function Connection() {
 
   return (
   <div style={{ marginTop: '20px' }}>
+    <div>
+      <Link to={'/create'} style={buttonStyle}>Add</Link>
+    </div>
     <table style={{ borderCollapse: 'collapse', width: '100%' }}>
       <thead>
         <tr style={{ backgroundColor: '#f2f2f2' }}>
+          <th style={tableHeaderStyle}>Action</th>
           <th style={tableHeaderStyle}>ID</th>
           <th style={tableHeaderStyle}>Name</th>
           <th style={tableHeaderStyle}>Password</th>
@@ -63,6 +78,7 @@ function Connection() {
       <tbody>
         {data.map((item) => (
           <tr key={item.ID} style={{ borderBottom: '1px solid #ddd' }}>
+            <td style={tableCellStyle}><button>Update</button><button>Delete</button></td>
             <td style={tableCellStyle}>{item.ID}</td>
             <td style={tableCellStyle}>{item.Name}</td>
             <td style={tableCellStyle}>{item.Password}</td>
