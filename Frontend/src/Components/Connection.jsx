@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import axios from 'axios'
 
 function Connection() {
   const tableHeaderStyle = {
@@ -29,7 +30,6 @@ function Connection() {
     border: 'none',
     borderRadius: '4px',
     cursor: 'pointer',
-    mar
   };
 
   const [data, setData] = useState([]);
@@ -58,6 +58,14 @@ function Connection() {
     fetchData();
   }, []); 
 
+  const handleDelete=(ID)=>{
+    axios.delete(`http://localhost:3000/deleteuser/${ID}`)
+    .then(res=>console.log(res))
+    .catch((err)=>console.log(err))
+
+    window.location.reload()
+  }
+
   return (
   <div style={{ marginTop: '20px' }}>
     <div>
@@ -76,9 +84,9 @@ function Connection() {
         </tr>
       </thead>
       <tbody>
-        {data.map((item) => (
-          <tr key={item.ID} style={{ borderBottom: '1px solid #ddd' }}>
-            <td style={tableCellStyle}><button>Update</button><button>Delete</button></td>
+        {data.map((item,index) => (
+          <tr key={index} style={{ borderBottom: '1px solid #ddd' }}>
+            <td style={tableCellStyle}><Link to={'/update/${item._id}'}>Update</Link><button onClick={(e)=>handleDelete(item.ID) }>Delete</button></td>
             <td style={tableCellStyle}>{item.ID}</td>
             <td style={tableCellStyle}>{item.Name}</td>
             <td style={tableCellStyle}>{item.Password}</td>

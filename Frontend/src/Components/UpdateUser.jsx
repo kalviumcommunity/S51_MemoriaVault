@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import axios from "axios";
 
 const addContainerStyle = {
-  maxWidth: '400px', 
+  maxWidth: '400px',
   margin: '50px auto',
   padding: '20px',
   border: '1px solid #ddd',
@@ -44,14 +44,15 @@ const submitButtonStyle = {
   transition: 'background-color 0.3s ease',
 };
 
-function CreateUser() {
+function UpdateUser() {
+
   const [formData, setFormData] = useState({
     ID: '',
     Name: '',
     Password: '',
     ImageURL: '',
     VideoURL: '',
-    DocumentURL:''
+    DocumentURL: '',
   });
 
   const handleChange = (e) => {
@@ -61,20 +62,20 @@ function CreateUser() {
     });
   };
 
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(e)
 
-    axios.post('http://localhost:3000/adduser',{ID :formData.ID,Name:formData.Name,Password:formData.Password,ImageURL:formData.ImageURL,VideoURL:formData.VideoURL,DocumentURL:formData.DocumentURL})
-    .then(result=>{
-        console.log(result)
-    })
-    console.log(formData);
+    axios.patch(`http://localhost:3000/updateuser/${formData.ID}`,{ID :formData.ID,Name:formData.Name,Password:formData.Password,ImageURL:formData.ImageURL,VideoURL:formData.VideoURL,DocumentURL:formData.DocumentURL})
+    .then(result=>console.log(result))
+    .catch(err=>console.log(err))
+
+    console.log('Updated Data:', formData);
   };
 
   return (
     <div style={addContainerStyle}>
-      <h2 style={addTitleStyle}>Add Form</h2>
+      <h2 style={addTitleStyle}>Update User</h2>
       <form>
         <label style={labelStyle}>
           ID
@@ -106,4 +107,4 @@ function CreateUser() {
   );
 }
 
-export default CreateUser;
+export default UpdateUser;
