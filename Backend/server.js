@@ -2,8 +2,8 @@ require("dotenv").config();
 const express = require("express")
 const app = express()
 const mongoose = require("mongoose");
-const {connectdb, isConnectedNow}=require('../config/dbConn.js')
-const {getRouter, postRouter, deleteRouter, putRouter} = require("../routes/MemoriaVault.routes.js")
+const {connectdb, isConnectedNow}=require('./config/dbConn.js')
+const {getRouter, postRouter, deleteRouter, putRouter} = require("./routes/MemoriaVault.routes.js")
 
 app.use("/",getRouter)
 app.use("/",postRouter)
