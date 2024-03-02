@@ -1,14 +1,24 @@
 require("dotenv").config();
 const express = require("express")
+const bodyParser=require("body-parser")
+const cors=require("cors")
 const app = express()
 const mongoose = require("mongoose");
 const {connectdb, isConnectedNow}=require('./config/dbConn.js')
 const {getRouter, postRouter, deleteRouter, putRouter} = require("./routes/MemoriaVault.routes.js")
+app.use(cors())
 
+app.use((req, res, next) => {
+    res.header({ "Access-Control-Allow-Origin": "*" });
+    next();
+})
+
+app.use(bodyParser.json())
 app.use("/",getRouter)
 app.use("/",postRouter)
 app.use("/",deleteRouter)
 app.use("/",putRouter)
+
 
 
 app.get("/ping",(req,res)=>{
@@ -25,4 +35,3 @@ app.listen(3000, async() => {
     await connectdb();
     console.log("Server is running on port 3000");
 });
-
