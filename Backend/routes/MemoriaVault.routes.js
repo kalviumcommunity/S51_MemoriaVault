@@ -56,7 +56,7 @@ postRouter.post('/adduser', async (req, res) => {
         const newUser = await MemoriaVault.create({ ID, Name, Password, ImageURL, VideoURL, DocumentURL });
         res.status(201).json(newUser);
     } else{
-        return res.status(400).send({message: `Bad request,error:${error}`})
+        return(res.status(400).send({message:`Bad request,error:${error}`}))
     }
     } catch (err) {
         console.log(err);
@@ -77,7 +77,7 @@ putRouter.patch('/updateuser/:id', async (req, res) => {
         const userDetails = await MemoriaVault.findOneAndUpdate(filter,{ID, Name, Password, ImageURL, VideoURL, DocumentURL });
         res.status(200).json(userDetails);
         }else{
-            return(res.status(400).send({message: `Bad request,error:${error}`}))
+            return(res.status(400).send({message:`Bad request,error:${error}`}))
         }
     }catch(err){
         console.log(err);
