@@ -1,4 +1,5 @@
 const express = require("express")
+const joi=require('joi')
 
 const getRouter = express.Router();
 const postRouter = express.Router();
@@ -10,6 +11,15 @@ getRouter.use(express.json());
 postRouter.use(express.json());
 putRouter.use(express.json());
 deleteRouter.use(express.json());
+
+const schema = joi.object({
+    ID:joi.string().required(),
+    Name:joi.string().required(),
+    Password:joi.string().required(),
+    ImageURL:joi.string(),
+    VideoURL:joi.string(),
+    DocumentURL:joi.string()
+})
 
 getRouter.get('/getallusers', async (req, res) => {
     try {
@@ -27,8 +37,8 @@ getRouter.get('/getallusers', async (req, res) => {
 getRouter.get('/getuser/:id', async (req, res) => {
     try {
         const userId = req.params.id;
-        const user = await MemoriaVault.findById(userId);
-        res.status(200).json(user);
+        const user = await MemoriaVault.findById({_id:userId});
+        res.status(200). json(user);
     } catch (err) {
         console.error(err);
         return res.status(500).send({
@@ -39,10 +49,15 @@ getRouter.get('/getuser/:id', async (req, res) => {
 
 
 postRouter.post('/adduser', async (req, res) => {
+    const {error,value}=schema.validate(req.body,{abortEarly:false})
     try {
-        const { ID, Name, Password, ImageURLl, VideoURL, DocumentURL } = req.body;
-        const newUser = await MemoriaVault.create({ ID, Name, Password, ImageURLl, VideoURL, DocumentURL });
+        if(!error){
+        const { ID, Name, Password, ImageURL, VideoURL, DocumentURL } = req.body;
+        const newUser = await MemoriaVault.create({ ID, Name, Password, ImageURL, VideoURL, DocumentURL });
         res.status(201).json(newUser);
+    } else{
+        return(res.status(400).send({message:`Bad request,error:${error}`}))
+    }
     } catch (err) {
         console.log(err);
         return res.status(500).send({
@@ -52,29 +67,23 @@ postRouter.post('/adduser', async (req, res) => {
 });
 
 
-putRouter.patch('/updateuser/:ID', async (req, res) => {
+putRouter.patch('/updateuser/:id', async (req, res) => {
+    const {error,value}=schema.validate(req.body,{abortEarly:false})
     try {
-        const userId = req.params.ID;
-        const updateFields = req.body;
-
-        const existingUser = await MemoriaVault.findOne({ID: userId });
-
-        if (!existingUser) {
-            return res.status(404).json({ message: 'User not found' });
+        if(!error){
+        const {id} = req.params;
+        const filter ={"ID":id}
+        let{ID, Name, Password, ImageURL, VideoURL, DocumentURL} = req.body;
+        const userDetails = await MemoriaVault.findOneAndUpdate(filter,{ID, Name, Password, ImageURL, VideoURL, DocumentURL });
+        res.status(200).json(userDetails);
+        }else{
+            return(res.status(400).send({message:`Bad request,error:${error}`}))
         }
-
-        const updatedUser = await MemoriaVault.findOneAndUpdate(
-            { ID: userId },
-            { $set: updateFields },
-            { new: true }
-        );
-
-        res.status(200).json(updatedUser);
-    } catch (err) {
-        console.error(err);
+    }catch(err){
+        console.log(err);
         return res.status(500).send({
             message: "Internal server error"
-        });
+        })
     }
 });
 
@@ -82,11 +91,10 @@ putRouter.patch('/updateuser/:ID', async (req, res) => {
 
 deleteRouter.delete('/deleteuser/:ID', async (req, res) => {
     try {
-        const userId = req.params.ID;
-        const deletedUser = await MemoriaVault.findOneAndDelete({userId});
-        res.status(200).json("deleted user");
+        const user = await  MemoriaVault.findOneAndDelete({ ID: req.params.ID });
+        res.status(200).json("Deleted user");
     } catch (err) {
-        console.error(err);
+        console.log(err);
         return res.status(500).send({
             message: "Internal server error"
         });
