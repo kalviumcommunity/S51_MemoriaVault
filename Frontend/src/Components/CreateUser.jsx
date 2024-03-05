@@ -65,10 +65,11 @@ function CreateUser() {
     e.preventDefault();
     console.log(e)
 
-    axios.post('https://s51-memoriavault.onrender.com/adduser',{ID :formData.ID,Name:formData.Name,Password:formData.Password,ImageURL:formData.ImageURL,VideoURL:formData.VideoURL,DocumentURL:formData.DocumentURL})
+    axios.post('http://localhost:3000/adduser',{ID :formData.ID,Name:formData.Name,Password:formData.Password,ImageURL:formData.ImageURL,VideoURL:formData.VideoURL,DocumentURL:formData.DocumentURL})
     .then(result=>{
         console.log(result)
     })
+    .catch(err=>{console.log(err)})
     console.log(formData);
   };
 
