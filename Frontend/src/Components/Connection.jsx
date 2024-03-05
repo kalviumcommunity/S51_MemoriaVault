@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import axios from 'axios'
+import axios from 'axios';
+import { removeCookie } from './Login';
 
 function Connection() {
   const tableHeaderStyle = {
@@ -30,7 +31,10 @@ function Connection() {
     border: 'none',
     borderRadius: '4px',
     cursor: 'pointer',
-  };
+    marginBottom: '20px',
+    marginLeft:'20px'
+};
+
 
   const [data, setData] = useState([]);
 
@@ -66,11 +70,18 @@ function Connection() {
     window.location.reload()
   }
 
+  const remove = () => {
+    removeCookie('username');
+    alert('Logout successful');
+  };
+
   return (
   <div style={{ marginTop: '20px' }}>
-    <div>
-      <Link to={'/create'} style={buttonStyle}>Add</Link>
-    </div>
+    <nav>
+      <Link to={'/login'} style={buttonStyle}>Log In</Link>
+      <button onClick={remove} style={buttonStyle}>Log Out</button>
+    </nav>
+    <Link to={'/create'} style={buttonStyle}>Add</Link>
     <table style={{ borderCollapse: 'collapse', width: '100%' }}>
       <thead>
         <tr style={{ backgroundColor: '#f2f2f2' }}>
