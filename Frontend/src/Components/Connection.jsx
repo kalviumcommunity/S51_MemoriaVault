@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from 'axios';
-import { removeCookie } from './Login';
+import WelcomeUser from "./SubComponent/WelcomeUser";
 
 function Connection() {
   const tableHeaderStyle = {
@@ -34,7 +34,12 @@ function Connection() {
     marginBottom: '20px',
     marginLeft:'20px'
 };
-
+  function getCookie(name) {
+    let cookieArray = document.cookie.split('; ');
+    let cookie = cookieArray.find((row) => row.startsWith(name + '='));
+    return cookie ? cookie.split('=')[1] : null;
+  }
+  const token = getCookie('token')
 
   const [data, setData] = useState([]);
 
@@ -43,7 +48,9 @@ function Connection() {
       const header = new Headers({ "Access-Control-Allow-Origin": "*" });
 
       const response = await fetch("http://localhost:3000/getallusers",  { 
-        header: header, 
+        headers:{
+          "authorization":`Bearer ${token}`
+        },
         // mode: 'no-cors',
        });
       if (!response.ok) {
@@ -63,7 +70,7 @@ function Connection() {
   }, []); 
 
   const handleDelete=(ID)=>{
-    axios.delete(`http://localhost:3000/deleteuser/${ID}`)
+    axios.delete(`http://localhost:3000/deleteuser/${ID}`,{headers:{authorization:`Bearer ${token}`}})
     .then(res=>console.log(res))
     .catch((err)=>console.log(err))
 
@@ -71,17 +78,16 @@ function Connection() {
   }
 
   const remove = () => {
-    removeCookie('username');
     alert('Logout successful');
   };
 
   return (
   <div style={{ marginTop: '20px' }}>
     <nav>
-      <Link to={'/login'} style={buttonStyle}>Log In</Link>
-      <button onClick={remove} style={buttonStyle}>Log Out</button>
+        <WelcomeUser/>
     </nav>
     <Link to={'/create'} style={buttonStyle}>Add</Link>
+    {(data.length > 1) ?
     <table style={{ borderCollapse: 'collapse', width: '100%' }}>
       <thead>
         <tr style={{ backgroundColor: '#f2f2f2' }}>
@@ -107,7 +113,12 @@ function Connection() {
           </tr>
         ))}
       </tbody>
-    </table>
+    </table>:<div id='Body-content'>
+          <div id="login">
+          <h1>Please Login To Continue</h1>
+          </div>
+        </div>
+        }
   </div>
   )
 }

@@ -1,6 +1,6 @@
 const express = require("express")
 const joi=require('joi')
-
+const jwt=require('jsonwebtoken')
 const getRouter = express.Router();
 const postRouter = express.Router();
 const putRouter = express.Router();
@@ -21,7 +21,17 @@ const schema = joi.object({
     DocumentURL:joi.string()
 })
 
-getRouter.get('/getallusers', async (req, res) => {
+const authenticateToken = (req, res,next) => {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1]
+    if(token==null) return res.sendStatus(401)
+    jwt.verify(token,process.env.ACCESS_TOKEN_SECRET,(err,user)=>{
+      if(err) return res.sendStatus(403)
+      next()
+    })
+  }
+
+getRouter.get('/getallusers',authenticateToken, async (req, res) => {
     try {
         const users = await MemoriaVault.find();
         res.status(200).json(users);
@@ -34,7 +44,7 @@ getRouter.get('/getallusers', async (req, res) => {
     }
 });
 
-getRouter.get('/getuser/:id', async (req, res) => {
+getRouter.get('/getuser/:id',authenticateToken, async (req, res) => {
     try {
         const userId = req.params.id;
         const user = await MemoriaVault.findById({_id:userId});
@@ -47,8 +57,7 @@ getRouter.get('/getuser/:id', async (req, res) => {
     }
 });
 
-
-postRouter.post('/adduser', async (req, res) => {
+postRouter.post('/adduser',authenticateToken, async (req, res) => {
     const {error,value}=schema.validate(req.body,{abortEarly:false})
     try {
         if(!error){
@@ -66,8 +75,7 @@ postRouter.post('/adduser', async (req, res) => {
     }
 });
 
-
-putRouter.patch('/updateuser/:id', async (req, res) => {
+putRouter.patch('/updateuser/:id',authenticateToken, async (req, res) => {
     const {error,value}=schema.validate(req.body,{abortEarly:false})
     try {
         if(!error){
@@ -89,7 +97,7 @@ putRouter.patch('/updateuser/:id', async (req, res) => {
 
 
 
-deleteRouter.delete('/deleteuser/:ID', async (req, res) => {
+deleteRouter.delete('/deleteuser/:ID',authenticateToken, async (req, res) => {
     try {
         const user = await  MemoriaVault.findOneAndDelete({ ID: req.params.ID });
         res.status(200).json("Deleted user");

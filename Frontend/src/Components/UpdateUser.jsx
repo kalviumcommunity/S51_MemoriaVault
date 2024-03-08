@@ -45,6 +45,12 @@ const submitButtonStyle = {
 };
 
 function UpdateUser() {
+  function getCookie(name) {
+    let cookieArray = document.cookie.split('; ');
+    let cookie = cookieArray.find((row) => row.startsWith(name + '='));
+    return cookie ? cookie.split('=')[1] : null;
+  }
+  const token = getCookie('token')
 
   const [formData, setFormData] = useState({
     ID: '',
@@ -66,7 +72,7 @@ function UpdateUser() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    axios.patch(`https://s51-memoriavault.onrender.com/updateuser/${formData.ID}`,{ID :formData.ID,Name:formData.Name,Password:formData.Password,ImageURL:formData.ImageURL,VideoURL:formData.VideoURL,DocumentURL:formData.DocumentURL})
+    axios.patch(`http://localhost:3000/updateuser/${formData.ID}`,{ID :formData.ID,Name:formData.Name,Password:formData.Password,ImageURL:formData.ImageURL,VideoURL:formData.VideoURL,DocumentURL:formData.DocumentURL},{headers:{authorization:`Bearer ${token}`}})
     .then(result=>console.log(result))
     .catch(err=>console.log(err))
 

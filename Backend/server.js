@@ -5,13 +5,18 @@ const cors=require("cors")
 const app = express()
 const mongoose = require("mongoose");
 const {connectdb, isConnectedNow}=require('./config/dbConn.js')
-const {getRouter, postRouter, deleteRouter, putRouter} = require("./routes/MemoriaVault.routes.js")
+const {getRouter, postRouter, deleteRouter, putRouter} = require("./routes/MemoriaVault.routes.js");
+const { signup, login } = require("./routes/AuthServer.js");
 app.use(cors())
 
 app.use((req, res, next) => {
     res.header({ "Access-Control-Allow-Origin": "*" });
     next();
 })
+
+app.use(express.json())
+app.use("/",signup)
+app.use("/",login)
 
 app.use(bodyParser.json())
 app.use("/",getRouter)
