@@ -18,7 +18,8 @@ const schema = joi.object({
     Password:joi.string().required(),
     ImageURL:joi.string(),
     VideoURL:joi.string(),
-    DocumentURL:joi.string()
+    DocumentURL:joi.string(),
+    CreatedBy:joi.string()
 })
 
 const authenticateToken = (req, res,next) => {
@@ -61,8 +62,8 @@ postRouter.post('/adduser',authenticateToken, async (req, res) => {
     const {error,value}=schema.validate(req.body,{abortEarly:false})
     try {
         if(!error){
-        const { ID, Name, Password, ImageURL, VideoURL, DocumentURL } = req.body;
-        const newUser = await MemoriaVault.create({ ID, Name, Password, ImageURL, VideoURL, DocumentURL });
+        const { ID, Name, Password, ImageURL, VideoURL, DocumentURL,CreatedBy } = req.body;
+        const newUser = await MemoriaVault.create({ ID, Name, Password, ImageURL, VideoURL, DocumentURL,CreatedBy });
         res.status(201).json(newUser);
     } else{
         return(res.status(400).send({message:`Bad request,error:${error}`}))
@@ -81,8 +82,8 @@ putRouter.patch('/updateuser/:id',authenticateToken, async (req, res) => {
         if(!error){
         const {id} = req.params;
         const filter ={"ID":id}
-        let{ID, Name, Password, ImageURL, VideoURL, DocumentURL} = req.body;
-        const userDetails = await MemoriaVault.findOneAndUpdate(filter,{ID, Name, Password, ImageURL, VideoURL, DocumentURL });
+        let{ID, Name, Password, ImageURL, VideoURL, DocumentURL,CreatedBy} = req.body;
+        const userDetails = await MemoriaVault.findOneAndUpdate(filter,{ID, Name, Password, ImageURL, VideoURL, DocumentURL,CreatedBy });
         res.status(200).json(userDetails);
         }else{
             return(res.status(400).send({message:`Bad request,error:${error}`}))
