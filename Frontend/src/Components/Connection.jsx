@@ -83,11 +83,12 @@ function Connection() {
 
   return (
   <div style={{ marginTop: '20px' }}>
-    <nav>
-        <WelcomeUser/>
-    </nav>
-    <Link to={'/create'} style={buttonStyle}>Add</Link>
+    <WelcomeUser/>
     {(data.length > 1) ?
+    <>
+    <nav>
+      <Link to={'/create'} style={buttonStyle}>Add</Link>
+    </nav>
     <table style={{ borderCollapse: 'collapse', width: '100%' }}>
       <thead>
         <tr style={{ backgroundColor: '#f2f2f2' }}>
@@ -113,7 +114,10 @@ function Connection() {
           </tr>
         ))}
       </tbody>
-    </table>:<div id='Body-content'>
+    </table>
+    </>
+    :
+    <div id='Body-content'>
           <div id="login">
           <h1>Please Login To Continue</h1>
           </div>

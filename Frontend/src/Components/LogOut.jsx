@@ -24,12 +24,12 @@ function LogOut() {
     <div id='Body'>
               <div id='Navbar'>
             <div id='Navbar-left'>
-            <Link to='/'><h1>Football Clubs</h1></Link>
+            <Link to='/'><h1>Memoria Vault</h1></Link>
             </div>
             <div></div>
         </div>
         <div id='Body-content'>
-      <h1>Log Out</h1>
+      <h1>See you back soon!</h1>
       <button onClick={signOut}>Log Out</button></div>
     </div>
   )
