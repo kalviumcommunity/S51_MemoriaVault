@@ -7,7 +7,8 @@ const userDetails=new Schema({
     Password:{type:String},
     ImageURL:{type:String},
     VideoURL:{type:String},
-    DocumentURL:{type:String}
+    DocumentURL:{type:String},
+    CreatedBy:{type:String}
 },{
     timestamps: true  
   });
