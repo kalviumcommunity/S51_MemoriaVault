@@ -42,12 +42,13 @@ function Connection() {
   const token = getCookie('token')
 
   const [data, setData] = useState([]);
+  const [filter,setFilter] = useState("All")
 
   const fetchData = async () => {
     try {
       const header = new Headers({ "Access-Control-Allow-Origin": "*" });
 
-      const response = await fetch("http://localhost:3000/getallusers",  { 
+      const response = await fetch("https://s51-memoriavault.onrender.com/getallusers",  { 
         headers:{
           "authorization":`Bearer ${token}`
         },
@@ -69,13 +70,24 @@ function Connection() {
     fetchData();
   }, []); 
 
-  const handleDelete=(ID)=>{
-    axios.delete(`http://localhost:3000/deleteuser/${ID}`,{headers:{authorization:`Bearer ${token}`}})
+  const handleDelete=async(ID)=>{
+    try{
+    await axios.delete(`https://s51-memoriavault.onrender.com/deleteuser/${ID}`,{headers:{authorization:`Bearer ${token}`}})
     .then(res=>console.log(res))
     .catch((err)=>console.log(err))
 
-    window.location.reload()
+    window.location.reload()}catch(err){
+      console.log(err)
+    }
   }
+  const filteredData = data.filter((item)=>{
+    if(filter === "All"){
+      return item
+    }
+    else if(item.CreatedBy.includes(filter)){
+      return item
+    }
+  })
 
   const remove = () => {
     alert('Logout successful');
@@ -87,7 +99,14 @@ function Connection() {
     {(data.length > 1) ?
     <>
     <nav>
-      <Link to={'/create'} style={buttonStyle}>Add</Link>
+      <Link to={'/create'} ><button>Add</button></Link>
+      <p> Created By :   </p> 
+            <select name="createdBy" id="CreatedBy" onChange={(e)=>{setFilter(e.target.value)}}>
+              <option value="All">All</option>
+              <option value="Sreela">Sreela</option>
+              <option value="Yash">Yash</option>
+              <option value="Jeevz">Jeevz</option>
+            </select>
     </nav>
     <table style={{ borderCollapse: 'collapse', width: '100%' }}>
       <thead>
@@ -99,10 +118,11 @@ function Connection() {
           <th style={tableHeaderStyle}>ImageURL</th>
           <th style={tableHeaderStyle}>VideoURL</th>
           <th style={tableHeaderStyle}>DocumentURL</th>
+          <th style={tableHeaderStyle}>CreatedBy</th>
         </tr>
       </thead>
       <tbody>
-        {data.map((item,index) => (
+        {filteredData.map((item,index) => (
           <tr key={index} style={{ borderBottom: '1px solid #ddd' }}>
             <td style={tableCellStyle}><Link to={'/update/${item._id}'}>Update</Link><button onClick={(e)=>handleDelete(item.ID) }>Delete</button></td>
             <td style={tableCellStyle}>{item.ID}</td>
@@ -111,6 +131,7 @@ function Connection() {
             <td style={URLColumnStyle}><a target="_blank" href={item.ImageURL}>{item.ImageURL}</a></td>
             <td style={URLColumnStyle}><a target="_blank" href={item.VideoURL}>{item.VideoURL}</a></td>
             <td style={URLColumnStyle}><a target="_blank" href={item.DocumentURL}>{item.DocumentURL}</a></td>
+            <td style={tableCellStyle}>{item.CreatedBy}</td>
           </tr>
         ))}
       </tbody>
