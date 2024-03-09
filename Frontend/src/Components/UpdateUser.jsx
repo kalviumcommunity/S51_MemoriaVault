@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link,useNavigate } from 'react-router-dom';
 
 const addContainerStyle = {
   maxWidth: '400px',
@@ -45,6 +45,7 @@ const submitButtonStyle = {
 };
 
 function UpdateUser() {
+  const navigate = useNavigate()
   function getCookie(name) {
     let cookieArray = document.cookie.split('; ');
     let cookie = cookieArray.find((row) => row.startsWith(name + '='));
@@ -59,6 +60,7 @@ function UpdateUser() {
     ImageURL: '',
     VideoURL: '',
     DocumentURL: '',
+    CreatedBy:''
   });
 
   const handleChange = (e) => {
@@ -72,8 +74,9 @@ function UpdateUser() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    axios.patch(`http://localhost:3000/updateuser/${formData.ID}`,{ID :formData.ID,Name:formData.Name,Password:formData.Password,ImageURL:formData.ImageURL,VideoURL:formData.VideoURL,DocumentURL:formData.DocumentURL},{headers:{authorization:`Bearer ${token}`}})
-    .then(result=>console.log(result))
+    axios.patch(`https://s51-memoriavault.onrender.com/updateuser/${formData.ID}`,{ID :formData.ID,Name:formData.Name,Password:formData.Password,ImageURL:formData.ImageURL,VideoURL:formData.VideoURL,DocumentURL:formData.DocumentURL,CreatedBy:formData.CreatedBy},{headers:{authorization:`Bearer ${token}`}})
+    .then(result=>{console.log(result);
+    navigate('/')})
     .catch(err=>console.log(err))
 
     console.log('Updated Data:', formData);
@@ -106,6 +109,10 @@ function UpdateUser() {
         <label style={labelStyle}>
           Document URL
           <input type="text" name="DocumentURL" value={formData.DocumentURL} onChange={handleChange} style={inputStyle} />
+        </label>
+        <label style={labelStyle}>
+          Created By
+          <input type="text" name="CreatedBy" value={formData.CreatedBy} onChange={handleChange} style={inputStyle} />
         </label>
         <Link to={"/"} onClick={handleSubmit} style={submitButtonStyle}>Submit</Link>
       </form>

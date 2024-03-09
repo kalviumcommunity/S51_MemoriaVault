@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link,useNavigate } from 'react-router-dom';
 import axios from "axios";
 
 const addContainerStyle = {
@@ -45,13 +45,15 @@ const submitButtonStyle = {
 };
 
 function CreateUser() {
+  const navigate = useNavigate()
   const [formData, setFormData] = useState({
     ID: '',
     Name: '',
     Password: '',
     ImageURL: '',
     VideoURL: '',
-    DocumentURL:''
+    DocumentURL:'',
+    CreatedBy:''
   });
 
   function getCookie(name) {
@@ -72,9 +74,10 @@ function CreateUser() {
     e.preventDefault();
     console.log(e)
 
-    axios.post('http://localhost:3000/adduser',{ID :formData.ID,Name:formData.Name,Password:formData.Password,ImageURL:formData.ImageURL,VideoURL:formData.VideoURL,DocumentURL:formData.DocumentURL},{headers:{authorization:`Bearer ${token}`}})
+    axios.post('https://s51-memoriavault.onrender.com/adduser',{ID :formData.ID,Name:formData.Name,Password:formData.Password,ImageURL:formData.ImageURL,VideoURL:formData.VideoURL,DocumentURL:formData.DocumentURL,CreatedBy:formData.CreatedBy},{headers:{authorization:`Bearer ${token}`}})
     .then(result=>{
-        console.log(result)
+        console.log(result);
+        navigate("/")
     })
     .catch(err=>{console.log(err)})
     console.log(formData);
@@ -107,6 +110,10 @@ function CreateUser() {
         <label style={labelStyle}>
           Document URL
           <input type="text" name="DocumentURL" value={formData.DocumentURL} onChange={handleChange} style={inputStyle} />
+        </label>
+        <label style={labelStyle}>
+          Created By
+          <input type="text" name="CreatedBy" value={formData.CreatedBy} onChange={handleChange} style={inputStyle} />
         </label>
         <Link to={"/"} onClick={handleSubmit} style={submitButtonStyle}>Submit</Link>
       </form>
