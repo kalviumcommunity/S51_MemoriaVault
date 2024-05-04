@@ -100,7 +100,6 @@ function Connection() {
     <>
     <nav>
       <Link to={'/create'} ><button>Add</button></Link>
-      <p> Created By :   </p> 
             <select name="createdBy" id="CreatedBy" onChange={(e)=>{setFilter(e.target.value)}}>
               <option value="All">All</option>
               <option value="Sreela">Sreela</option>
